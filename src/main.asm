@@ -31,6 +31,10 @@ command_loop:
   jc ch_boykisser
 
 
+  mov si, restart_cmd
+  call cmps
+  jc ch_restart
+
   jmp ch_invalid
 
 halt:
@@ -56,6 +60,11 @@ ch_boykisser:
 
 ch_invalid:
   mov si, invalid_msg
+  call puts
+  jmp command_loop
+
+
+ch_restart:
   call puts
   jmp command_loop
 
@@ -196,6 +205,11 @@ boykisser: db "    .@.                       .@-  ", endl
            db "           @@@@@@@@@@@@@@@@.       ", endl
            db "          *@@@@@@@@@@@@@@@@#       ", endl
            db "          @@@@@@@@@@@@@@@@@@       ", endl, 0
+
+restart_cmd:
+  call clear
+  mov si, welcome_msg
+  call puts
 
 clear_cmd: db "clear", 0
 
