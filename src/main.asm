@@ -246,7 +246,7 @@ neofetch_cmd: db "neofetch", 0
 
 neofetch: 
         db "BothkisserOS", endl
-        // db bothkisser, endl
+        ;; db bothkisser, endl
         db " ", endl
         db "Version: v1.0.0 Birobice", endl, 0
 
