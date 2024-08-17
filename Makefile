@@ -15,6 +15,9 @@ build/main.bin: build src/main.asm
 
 build:
 	mkdir build
+	sudo make build/boot.bin
+	sudo make build/main.bin
+	sudo make build/main.img
 
 run:
 	qemu-system-x86_64 -drive if=floppy,file=build/main.img,format=raw &

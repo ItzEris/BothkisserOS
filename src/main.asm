@@ -30,6 +30,10 @@ command_loop:
   call cmps
   jc ch_boykisser
 
+  mov si, neofetch_cmd
+  call cmps
+  jc ch_neofetch
+
 
   mov si, restart_cmd
   call cmps
@@ -55,6 +59,11 @@ ch_clear:
 
 ch_boykisser:
   mov si, boykisser
+  call puts
+  jmp command_loop
+
+ch_neofetch:
+  mov si, neofetch
   call puts
   jmp command_loop
 
@@ -171,14 +180,17 @@ clear: ; clears the screen | params: ( colour: bh ) | returns: void
 
 ;; DATA
 
-welcome_msg: db "Welcome to The Boykisser Operating System (BOS) :3", endl, 0
+welcome_msg: db "Welcome to The Bothkisser Operating System (BiOS) based on BoykisserOS :3", endl, 0
 prompt: db ":3 ", 0
 
 help_cmd: db "help", 0
-help_msg: db "help - shows this message", endl
+help_msg: 
+          db "Aw, you need help? I gotchu!", endl 
+          db "", endl
+          db "help - shows this message", endl
           db "clear - clears the screen", endl
           db "boykisser - shows boykisser uwu", endl
-          db "electrocute - cutely kill the OS uwu", endl, 0
+          db "neofetch - that is not neofetch >:3", endl
 
 boykisser_cmd: db "boykisser", 0
 boykisser: db "    .@.                       .@-  ", endl
@@ -205,6 +217,40 @@ boykisser: db "    .@.                       .@-  ", endl
            db "           @@@@@@@@@@@@@@@@.       ", endl
            db "          *@@@@@@@@@@@@@@@@#       ", endl
            db "          @@@@@@@@@@@@@@@@@@       ", endl, 0
+
+bothkisser:
+db "      ......           ...==..     ", endl,                        
+db "      ..#**+...        ..*****..           ", endl,                 
+db "    ..+**+***..     ..=***++**:...                 ", endl,        
+db "    ..+**+++***=.. ...#**++++***.. ..+#-.                  ", endl, 
+db "    .:**++++++*********++++++++*+..**+***:=*-.              ", endl,
+db "   ..**+++++++++++++++++++++++++*.=#**++**++*#.             ", endl,
+db "    :**+++++++++++++++++++++++++*==#**#****+*#.             ", endl,
+db "   .-*+++++++++++++++++++*****++**.#####***##-......        ", endl,
+db "   .:**********++++++***#@@%%****=..%%%%%##+.:+**+..        ", endl,
+db " ...-***###%%%******+*%#****+++****..%%#-..:**++*=..        ", endl,
+db " ..=*++++++++++********++++++++++**..:. ..=*++++**:.        ", endl,
+db " ...**++++++++**######**+++++++++*=.   ...**+++**=..        ", endl,
+db "   .-*++++++++++*####*++++++++++**..    .-*++++**...        ", endl,
+db "    .:**++++++++*#++**++++++++**=..     .=*++++**...        ", endl,
+db "   ...=**+++++++***++++++++**+..       .-*+++++*=..        ", endl,
+db "      ...=****+++++++++++******:.       ..********=...      ", endl,
+db "      ..=*****++****************-..      .-*********...     ", endl,
+db "        .***********************#=...     ..-*********=...   ", endl,
+db "        :***********************#**=.. ..   ..*********+..   ", endl,
+db "     .+**************************#*:...   ..+*******#*..  ", endl,
+db "     ..+#***************************#*:..   ..=#***#*##-.  ", endl,
+db "       ..+#*******######*###############*...  ..=########.  ", endl, 0
+  
+neofetch_cmd: db "neofetch", 0
+
+neofetch: 
+        db "BothkisserOS", endl
+        ;; how do i print out the bothkisser cat, help
+        db " ", endl
+        db "Version: v1.0.0 Birobice", endl, 0
+
+
 
 restart_cmd:
   call clear
