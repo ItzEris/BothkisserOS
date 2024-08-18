@@ -17,7 +17,7 @@ build:
 	mkdir build
 
 run:
-	qemu-system-x86_64 -drive if=floppy,file=build/main.img,format=raw &
+	qemu-system-i386 -drive if=floppy,file=build/main.img,format=raw &
 
 clean:
 	rm -rf build/
