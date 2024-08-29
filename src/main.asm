@@ -34,13 +34,9 @@ command_loop:
   call cmps
   jc ch_bothkisser
 
-  mov si, neofetch_cmd
+  mov si, bothfetch_cmd
   call cmps
-  jc ch_neofetch
-
-  mov si, restart_cmd
-  call cmps
-  jc ch_restart
+  jc ch_bothfetch
 
   jmp ch_invalid
 
@@ -70,13 +66,8 @@ ch_bothkisser:
   call puts
   jmp command_loop
 
-ch_neofetch:
-  mov si, neofetch_msg
-  call puts
-  jmp command_loop
-
-ch_restart:
-  mov si, restart_msg
+ch_bothfetch:
+  mov si, bothfetch_msg
   call puts
   jmp command_loop
 
@@ -107,24 +98,41 @@ puts: ; prints a string to the screen | params: ( string: ds:si ) | returns: voi
 
 gets: ; gets a string from the user | params: ( buffer: es:di, max_count: cx ) | returns: void
   push di
+  push dx
   push cx
   push bx
   push ax
 
   xor bx, bx
-  .loop:
+  xor dx, dx
+  .loop:  
     xor ah, ah
     int 0x16
     cmp ah, 0x1c
     je .end
+    cmp ah, 0x0e
+    je .backspace
 
-    test cx, cx
-    jz .loop
-    dec cx
+    cmp dx, cx
+    je .loop
+    inc dx
 
     stosb
     mov ah, 0x0e
     int 0x10
+    jmp .loop
+  .backspace:
+    test dx, dx
+    jz .loop
+    mov ah, 0x0e
+    mov al, 8
+    int 0x10
+    xor al, al
+    int 0x10
+    mov al, 8
+    int 0x10
+    dec di
+    dec dx
     jmp .loop
   .end:
     mov byte es:[di], 0
@@ -138,6 +146,7 @@ gets: ; gets a string from the user | params: ( buffer: es:di, max_count: cx ) |
     pop ax
     pop bx
     pop cx
+    pop dx
     pop di
     ret
 
@@ -167,6 +176,7 @@ cmps: ; compares two strings | params: ( string1: ds:si, string2: es:di ) | retu
     pop di
     ret
 
+
 clear: ; clears the screen | params: ( colour: bh ) | returns: void
   push dx
   push cx
@@ -188,17 +198,23 @@ clear: ; clears the screen | params: ( colour: bh ) | returns: void
 
 ;; DATA
 
-welcome_msg: db "Welcome to The Bothkisser Operating System (BiOS) based on BoykisserOS :3", endl, 0
+welcome_msg: db "Welcome to The Bothkisser Operating System (BiOS) based on BoykisserOS :3", endl, endl
+             db "<---> WARNING <--->", endl
+             db "Since 29th of August 2024, BothkisserOS is no longer maintained. ", endl
+             db "Go check out the creator of BoykisserOS! ---> https://github.com/shappp1", endl, 0
 prompt: db ":3 ", 0
 
 help_cmd: db "help", 0
 help_msg: 
-          db "Aw, you need help? I gotchu!", endl, endl   ; same as with neofetch_msg
+          db "<---> WARNING <--->", endl
+          db "Since 29th of August 2024, BothkisserOS is no longer maintained. ", endl
+          db "Go check out the creator of BoykisserOS! ---> https://github.com/shappp1", endl, endl
+          db "Aw, you need help? I gotchu!", endl, endl   ; same as with bothfetch_msg
           db "help - shows this message", endl
           db "clear - clears the screen", endl
           db "boykisser - shows boykisser uwu", endl
           db "bothkisser - shows bothkisser owo", endl
-          db "neofetch - that is not neofetch >:3", endl, 0   ; do not forget zero at end, as it tells the puts function when to stop printing
+          db "bothfetch - that is not neofetch >:3", endl, 0   ; do not forget zero at end, as it tells the puts function when to stop printing
 
 boykisser_cmd: db "boykisser", 0
 boykisser: db "    .@.                       .@-  ", endl
@@ -251,17 +267,21 @@ bothkisser:
             db "     ..+#***************************#*:..   ..=#***#*##-. ", endl,
             db "       ..+#*******######*###############*...  ..=########.", endl, 0
 
-neofetch_cmd: db "neofetch", 0
-neofetch_msg:
-        db "BothkisserOS", endl, endl  ; can use 2 newlines instead of db empty line, could also technically do 'db BothkisserOS, 10, endl, 0' to save 1 byte of space (not that it really matters)
-        ;; db bothkisser, endl
-        db "Version: v1.1.0 Birobice Fixed", endl, 0
+bothfetch_cmd: db "bothfetch", 0
+bothfetch_msg:
+        db "<---> WARNING <--->", endl
+        db "Since 29th of August 2024, BothkisserOS is no longer maintained. ", endl
+        db "Go check out the creator of BoykisserOS! ---> https://github.com/shappp1", endl, endl
+        db "BothkisserOS", endl  ; can use 2 newlines instead of db empty line, could also technically do 'db BothkisserOS, 10, endl, 0' to save 1 byte of space (not that it really matters)
+        db "Version: v2.0.0 Birobice Forever EOL", endl, endl
+        db "/// CREDITS ///", endl
+        db "shappp1 - creator of the original BoykisserOS, additional help", endl
+        db "ItzEris - creator of the BothkisserOS fork.", endl, 0
 
-restart_cmd: db "restart", 0
-restart_msg: db "Restarting is not yet implemented", endl, 0
+
 
 clear_cmd: db "clear", 0
 
-invalid_msg: db "Uh oh you used an invalid command >:(", endl, 0
+invalid_msg: db "Uh oh. you used an invalid command >:(", endl, 0
 
 command_buffer: times 256 db 0
