@@ -255,7 +255,7 @@ neofetch_cmd: db "neofetch", 0
 neofetch_msg:
         db "BothkisserOS", endl, endl  ; can use 2 newlines instead of db empty line, could also technically do 'db BothkisserOS, 10, endl, 0' to save 1 byte of space (not that it really matters)
         ;; db bothkisser, endl
-        db "Version: v1.0.0 Birobice", endl, 0
+        db "Version: v1.1.0 Birobice Fixed", endl, 0
 
 restart_cmd: db "restart", 0
 restart_msg: db "Restarting is not yet implemented", endl, 0
